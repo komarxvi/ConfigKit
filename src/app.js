@@ -1,6 +1,20 @@
+const generateButton = document.getElementById("generate-button");
+const footnoteInput = document.getElementById("footnote-input");
+
+function getUUID() {
+  if (window.crypto && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
 function generateProfileXML(footnoteText) {
-  const profileUUID = crypto.randomUUID();
-  const payloadUUID = crypto.randomUUID();
+  const profileUUID = getUUID();
+  const payloadUUID = getUUID();
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -44,3 +58,18 @@ function generateProfileXML(footnoteText) {
 </dict>
 </plist>`;
 }
+
+enerateButton.addEventListener("click", () => {
+  const message = footnoteInput.value.trim();
+
+  if (!message) {
+    alert("Пожалуйста, введите текст!");
+    return;
+  }
+
+ const xmlContent = generateProfileXML(message);
+  const blob = new Blob([xmlContent], { type: "application/x-apple-aspen-config" });
+  const downloadUrl = URL.createObjectURL(blob);
+
+ window.location.href = downloadUrl;
+});
