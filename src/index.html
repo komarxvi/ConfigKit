@@ -1,39 +1,23 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<title>ConfigKit alpha</title>
-<link rel="stylesheet" href="style.css">
-<meta charset="UTF-8">
-<link rel="shortcut icon" href="https://i.pinimg.com/736x/f3/69/d9/f369d9d1606b10fbfbf1a0f0d03569fe.jpg">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ConfigKit alpha</title>
+  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="shortcut icon" href="https://i.pinimg.com/736x/f3/69/d9/f369d9d1606b10fbfbf1a0f0d03569fe.jpg">
 </head>
-
-
 <body>
 
-    <h1 id="project">ConfigKit</h1>
-    <p id="description">Create Apple configuration profiles</p>
+  <h1 id="project">ConfigKit v0.1</h1>
+  <p id="description">Create Apple configuration profiles</p>
 
-    <div id="card">
+  <div id="card">
+    <label for="footnote-input">Lock screen message</label>
+    <textarea id="footnote-input" rows="3" placeholder="Swipe up to unlock"></textarea>
+    <button id="generate-button" type="button">Generate .mobileconfig</button>
+  </div>
 
-        <label for="footnote-input">Lock screen message</label>
-<textarea 
-  id="footnote-input" 
-  rows="3" 
-  placeholder="Swipe up to unlock"
-></textarea>
-<button id="generate-button" type="button">Generate .mobileconfig</button>
-
-</div>
-
-<script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
-
-
-
-
-
-
 </html>
