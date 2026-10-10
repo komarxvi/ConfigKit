@@ -6,21 +6,34 @@
         <title>ConfigKit</title>
         <link rel="stylesheet" href="style.css">
         <link rel="shortcut icon" href="https://i.pinimg.com/736x/f3/69/d9/f369d9d1606b10fbfbf1a0f0d03569fe.jpg">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ConfigKit">
+
+<meta name="theme-color" content="#f2f2f7">
     </head>
 
 <body>
-    <h1>ConfigKit v2.0</h1>
+    <h1>ConfigKit v2.1</h1>
     <p id="description">A simple web-based generator for Apple configuration profiles (.mobileconfig).</p>
 
+
+
+
+
+<div class="section-title">Prolife settings</div>
     <div id="card">
         <label for="footnote-input">Lock screen message</label>
         <textarea name="footnote-input" id="footnote-input" rows="3" placeholder="Swipe Up to Unlock"></textarea>
         <button id="generate-button" type="button">Generate .mobileconfig</button>
     </div>
-    <div id="preview-card">
+
+    <div class="section-title">XML preview</div>
+<details id="preview-card">
     <label id="live-preview">Live XML Preview</label>
     <pre><code id="xml-preview">The XML profile structure will be generated here in real time.</code></pre>
-    </div>
+</details>
 
     <script src="app.js"></script>
 </body>

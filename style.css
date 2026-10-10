@@ -1,12 +1,152 @@
 *, *::before, *::after {
     box-sizing: border-box;
+-webkit-tap-highlight-color: transparent;
 }
 
-body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; background-color: #f2f2f7; color: #1c1c1e; padding: 32px 16px; margin: 0; }
+:root {
+  --bg-page: #f2f2f7;
+  --bg-card: #ffffff;
+  --bg-input: #ffffff;
+  --text-main: #1c1c1e;
+  --text-secondary: #8e8e93;
+  --border-color: #e5e5ea;
+  --accent-color: #0071e3;
+}
 
-#card, #preview-card { background-color: #ffffff; border-radius: 20px; max-width: 480px; margin: 0 auto 20px auto; padding: 20px; border: 1px solid #e5e5ea;}
-#preview-card pre {background-color: #1d1d1f; color: #f2f2f7; border-radius: 12px; overflow-x: auto; padding: 20px; border: 1px solid #e5e5ea;}
-#xml-preview {font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px;}
-label {font-weight: 600; font-size: 14px; margin-bottom: 8px; display: block;}
-#footnote-input { font-family: inherit; resize: none; width: 100%; border-radius: 12px; border: 1px solid #d2d2d7; padding: 10px; font-size: 16px; }
-#generate-button { background-color: #0071e3; color: #ffffff; border-radius: 980px; width: 100%; border: none; padding: 10px; font-size: 16px; cursor: pointer; }
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-page: #000000;
+    --bg-card: #1c1c1e;
+    --bg-input: #2c2c2e;    
+    --text-main: #ffffff;       
+    --border-color: #38383a;     
+  }}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  padding: 32px 16px;
+  margin: 0;
+  transition: background-color 0.3s ease, color 0.3s ease; 
+}
+
+h1 {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin: 16px 0 4px 0;
+  padding: 0 4px;
+}
+
+#description {
+  font-size: 14px;
+  color: #8e8e93; 
+  margin: 0 0 24px 4px;
+}
+
+/* 1. Делаем плашку summary удобной для нажатия пальцем */
+#preview-card summary {
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+  list-style: none; /* Убирает стандартный браузерный треугольник */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  outline: none;
+}
+
+#preview-card summary::-webkit-details-marker {
+  display: none;
+}
+
+#preview-card summary::after {
+  content: "›";
+  font-size: 20px;
+  color: var(--text-secondary);
+  transition: transform 0.2s ease;
+}
+
+#preview-card[open] summary::after {
+  transform: rotate(90deg);
+}
+
+#preview-card[open] pre {
+  margin-top: 16px;
+}
+#card, #preview-card {
+  background-color: var(--bg-card);
+  border-radius: 20px;
+  max-width: 480px;
+  margin: 0 auto 20px auto;
+  padding: 20px;
+  border: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.section-title {
+  font-size: 13px;
+  text-transform: uppercase;
+  color: #8e8e93;
+  font-weight: 500;
+  margin: 16px 0 6px 16px;
+  letter-spacing: -0.1px;
+}
+
+#preview-card pre {
+    background-color: #1d1d1f;
+    color: #f2f2f7;
+    border-radius: 15px;
+    overflow-x: auto;
+    padding: 20px;
+    border: 1px solid #e5e5ea;
+}
+
+#xml-preview {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px;
+}
+
+label {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+#footnote-input {
+  font-family: inherit;
+  resize: none;
+  width: 100%;
+  border-radius: 12px;
+  background-color: var(--bg-input);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  font-size: 16px;
+}
+#footnote-input:focus {
+  outline: transparent; 
+}
+
+#generate-button {
+  background-color: #0071e3;
+  color: #ffffff;
+  border-radius: 980px;
+  width: 100%;
+  border: none;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 14px;
+  transition: transform 0.25s ease-out, filter 0.25s ease-out, box-shadow 0.25s ease-out;
+}
+
+#generate-button:active {
+  transform: scale(1.03);
+  filter: brightness(1.25); 
+  box-shadow: 0 0 16px rgba(28, 137, 247, 0.555);
+}
