@@ -9,6 +9,10 @@ function generateXML(userText) {
 <dict>
     <key>PayloadDisplayName</key>
     <string>ConfigKit Lock Screen</string>
+    <key>PayloadIdentifier</key>
+    <string>com.configkit.lockscreen</string>
+    <key>PayloadUUID</key>
+    <string>3A4D2702-8664-4CEB-B61E-2B0302E4E105</string>
     <key>PayloadType</key>
     <string>Configuration</string>
     <key>PayloadVersion</key>
@@ -16,8 +20,16 @@ function generateXML(userText) {
     <key>PayloadContent</key>
     <array>
         <dict>
+            <key>PayloadDisplayName</key>
+            <string>Lock Screen Message</string>
+            <key>PayloadIdentifier</key>
+            <string>com.configkit.lockscreen.footnote</string>
+            <key>PayloadUUID</key>
+            <string>4B1E9021-A925-46D9-89B7-910D67634C2B</string>
             <key>PayloadType</key>
             <string>com.apple.shareddeviceconfiguration</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
             <key>LockScreenFootnote</key>
             <string>${userText}</string>
         </dict>
