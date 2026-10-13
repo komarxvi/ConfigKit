@@ -63,5 +63,40 @@ link.click();
   }, 1500);
 });
 
-xmlPreview.textContent = generateXML(footnoteInput.value || "Swipe Up to Unlock");
+xmlPreview.textContent = generateXML(footnoteInput.value || "Swipe Up to Unlock"); 
 
+generateButton.addEventListener("click", function() {
+  if (!footnoteInput.value.trim()) {
+    alert("Please enter a lock screen message.");
+    return;
+  }
+
+  generateButton.disabled = true;
+  generateButton.textContent = "Generating...";
+  generateButton.style.opacity = "0.7";
+
+  setTimeout(function() {
+    const xmlContent = generateXML(footnoteInput.value);
+    const blob = new Blob([xmlContent], { type: "application/x-apple-aspen-config" });
+    const downloadUrl = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.download = "ConfigKit.mobileconfig";
+    document.body.appendChild(link);
+    link.click();
+
+    generateButton.textContent = "Generated!";
+    generateButton.style.backgroundColor = "#34c759";
+    generateButton.style.opacity = "1";
+
+    setTimeout(function() {
+      document.body.removeChild(link);
+      URL.revokeObjectURL(downloadUrl);
+
+      generateButton.disabled = false;
+      generateButton.textContent = "Generate .mobileconfig";
+      generateButton.style.backgroundColor = ""; 
+    }, 1000);
+  }, 500);
+});

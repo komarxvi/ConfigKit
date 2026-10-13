@@ -32,7 +32,7 @@ body {
 }
 
 h1 {
-  font-size: 34px;
+  font-size: 32px;
   font-weight: 700;
   letter-spacing: -0.5px;
   margin: 16px 0 4px 0;
@@ -40,22 +40,28 @@ h1 {
 }
 
 #description {
-  font-size: 14px;
+  font-size: 11px;
   color: #8e8e93; 
   margin: 0 0 24px 4px;
 }
 
-/* 1. Делаем плашку summary удобной для нажатия пальцем */
 #preview-card summary {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 15px;
   cursor: pointer;
   user-select: none;
-  list-style: none; /* Убирает стандартный браузерный треугольник */
+  list-style: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  outline: none;
+  min-height: 48px; 
+  padding: 4px 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.15s ease;
+}
+
+#preview-card summary:active {
+  opacity: 0.6;
 }
 
 #preview-card summary::-webkit-details-marker {
@@ -64,9 +70,11 @@ h1 {
 
 #preview-card summary::after {
   content: "›";
-  font-size: 20px;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1;
   color: var(--text-secondary);
-  transition: transform 0.2s ease;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 #preview-card[open] summary::after {
@@ -74,8 +82,9 @@ h1 {
 }
 
 #preview-card[open] pre {
-  margin-top: 16px;
+  margin-top: 12px;
 }
+
 #card, #preview-card {
   background-color: var(--bg-card);
   border-radius: 20px;
@@ -142,10 +151,16 @@ label {
   font-weight: 600;
   cursor: pointer;
   margin-top: 14px;
-  transition: transform 0.25s ease-out, filter 0.25s ease-out, box-shadow 0.25s ease-out;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+              filter 0.45s ease-out,
+              box-shadow 0.45s ease-out,
+              background-color 0.6s ease;
 }
 
 #generate-button:active {
+  transition: transform 0.05s ease-out,
+              filter 0.05s ease-out,
+              box-shadow 0.05s ease-out;
   transform: scale(1.03);
   filter: brightness(1.25); 
   box-shadow: 0 0 16px rgba(28, 137, 247, 0.555);
