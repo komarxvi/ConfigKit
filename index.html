@@ -1,48 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>ConfigKit</title>
-        <link rel="stylesheet" href="style.css">
-        <link rel="shortcut icon" href="https://i.pinimg.com/736x/f3/69/d9/f369d9d1606b10fbfbf1a0f0d03569fe.jpg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ConfigKit</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="https://i.pinimg.com/736x/f3/69/d9/f369d9d1606b10fbfbf1a0f0d03569fe.jpg">
 
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="ConfigKit">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ConfigKit">
 
-<meta name="theme-color" content="#f2f2f7">
-    </head>
-
+    <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+</head>
 <body>
-    <h1>ConfigKit v2.1</h1>
+    <h1>ConfigKit v2.4</h1>
     <p id="description">A simple web-based generator for Apple configuration profiles (.mobileconfig).</p>
 
-
-
-
-
-<div class="section-title">Prolife settings</div>
+    <div class="section-title">Profile Settings</div>
     <div id="card">
-        <label for="footnote-input">Lock screen message</label>
-        <textarea name="footnote-input" id="footnote-input" rows="3" placeholder="Swipe Up to Unlock"></textarea>
+        <div class="segmented-control" id="segmented-control">
+            <button type="button" id="tab-lockscreen" class="segment-btn active">Lock Screen</button>
+            <button type="button" id="tab-restrictions" class="segment-btn">Restrictions</button>
+        </div>
+
+        <div id="panel-lockscreen" class="tab-panel">
+            <label for="footnote-input">Lock screen message</label>
+            <textarea name="footnote-input" id="footnote-input" rows="3" placeholder="Swipe Up to Unlock"></textarea>
+        </div>
+
+        <div id="panel-restrictions" class="tab-panel hidden">
+            <div class="toggle-row">
+                <span>Disable Camera</span>
+                <input type="checkbox" id="toggle-camera" class="ios-toggle">
+            </div>
+            <div class="toggle-row">
+                <span>Disable Siri Assistant</span>
+                <input type="checkbox" id="toggle-siri" class="ios-toggle">
+            </div>
+            <div class="toggle-row">
+                <span>Disable Screenshots</span>
+                <input type="checkbox" id="toggle-screenshot" class="ios-toggle">
+            </div>
+            <div class="toggle-row">
+                <span>Disable AirDrop</span>
+                <input type="checkbox" id="toggle-airdrop" class="ios-toggle">
+            </div>
+            <div class="toggle-row">
+                <span>Disable App Removal</span>
+                <input type="checkbox" id="toggle-app-removal" class="ios-toggle">
+            </div>
+            <div class="toggle-row">
+                <span>Disable Safari</span>
+                <input type="checkbox" id="toggle-safari" class="ios-toggle">
+            </div>
+        </div>
+
         <button id="generate-button" type="button">Generate .mobileconfig</button>
     </div>
 
-    <div class="section-title">XML preview</div>
-<details id="preview-card">
-    <label id="live-preview">Live XML Preview</label>
-    <pre><code id="xml-preview">The XML profile structure will be generated here in real time.</code></pre>
-</details>
+    <div class="section-title">XML Preview</div>
+    <details id="preview-card">
+        <summary id="live-preview">Live XML Preview</summary>
+        <pre><code id="xml-preview"></code></pre>
+        <button id="copy-button" type="button">Copy XML</button>
+    </details>
 
     <script src="app.js"></script>
 </body>
-
-
-
-
-
-
-
-
 </html>
