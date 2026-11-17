@@ -1,23 +1,80 @@
 const footnoteInput = document.getElementById("footnote-input");
+const charCount = document.getElementById("char-count");
 const xmlPreview = document.getElementById("xml-preview");
+const phoneFootnote = document.getElementById("phone-footnote");
 const generateButton = document.getElementById("generate-button");
 const copyButton = document.getElementById("copy-button");
 
-const segmentedControl = document.getElementById("segmented-control");
-const tabLockscreen = document.getElementById("tab-lockscreen");
-const tabRestrictions = document.getElementById("tab-restrictions");
-const panelLockscreen = document.getElementById("panel-lockscreen");
-const panelRestrictions = document.getElementById("panel-restrictions");
+const restrictToggles = {
+  allowCamera: document.getElementById("toggle-camera"),
+  allowAssistant: document.getElementById("toggle-siri"),
+  allowScreenShot: document.getElementById("toggle-screenshot"),
+  allowAirDrop: document.getElementById("toggle-airdrop"),
+  allowAppRemoval: document.getElementById("toggle-app-removal"),
+  allowSafari: document.getElementById("toggle-safari")
+};
 
-const toggleCamera = document.getElementById("toggle-camera");
-const toggleSiri = document.getElementById("toggle-siri");
-const toggleScreenshot = document.getElementById("toggle-screenshot");
-const toggleAirdrop = document.getElementById("toggle-airdrop");
-const toggleAppRemoval = document.getElementById("toggle-app-removal");
-const toggleSafari = document.getElementById("toggle-safari");
+const restrictionsCard = document.getElementById("restrictions-card");
+const restrictionsToggle = document.getElementById("restrictions-toggle");
+const restrictionsInner = document.querySelector(".disclosure-inner");
+
+function syncRestrictionsHeight() {
+  restrictionsCard.style.setProperty("--content-height", `${restrictionsInner.scrollHeight}px`);
+}
+
+function updateRestrictionIndicator() {
+  const anyEnabled = Object.values(restrictToggles).some(function(toggle) {
+    return toggle.checked;
+  });
+  restrictionsCard.classList.toggle("has-restrictions", anyEnabled);
+}
+
+syncRestrictionsHeight();
+updateRestrictionIndicator();
+if (window.ResizeObserver) {
+  new ResizeObserver(syncRestrictionsHeight).observe(restrictionsInner);
+}
+window.addEventListener("resize", syncRestrictionsHeight);
+
+restrictionsToggle.addEventListener("click", function() {
+  const isOpen = restrictionsCard.classList.toggle("is-open");
+  restrictionsToggle.setAttribute("aria-expanded", String(isOpen));
+  if (isOpen) syncRestrictionsHeight();
+});
+
+function makeUUID() {
+  if (window.crypto && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID().toUpperCase();
+  }
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    const r = Math.floor(Math.random() * 16);
+    return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+  }).toUpperCase();
+}
+
+const profileUUIDs = {
+  profile: makeUUID(),
+  lockscreen: makeUUID(),
+  restrictions: makeUUID()
+};
+
+function escapeXML(value) {
+  return value
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
 
 function generateXML() {
-  const userText = footnoteInput.value.trim() || "Swipe Up to Unlock";
+  const userText = escapeXML(footnoteInput.value.trim() || "Swipe Up to Unlock");
+
+  const restrictionKeys = Object.keys(restrictToggles).map(function(key) {
+    const allowed = !restrictToggles[key].checked;
+    return `            <key>${key}</key>\n            <${allowed}/>`;
+  }).join("\n");
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -28,7 +85,7 @@ function generateXML() {
     <key>PayloadIdentifier</key>
     <string>com.configkit.profile</string>
     <key>PayloadUUID</key>
-    <string>3A4D2702-8664-4CEB-B61E-2B0302E4E105</string>
+    <string>${profileUUIDs.profile}</string>
     <key>PayloadType</key>
     <string>Configuration</string>
     <key>PayloadVersion</key>
@@ -41,7 +98,7 @@ function generateXML() {
             <key>PayloadIdentifier</key>
             <string>com.configkit.lockscreen.footnote</string>
             <key>PayloadUUID</key>
-            <string>4B1E9021-A925-46D9-89B7-910D67634C2B</string>
+            <string>${profileUUIDs.lockscreen}</string>
             <key>PayloadType</key>
             <string>com.apple.shareddeviceconfiguration</string>
             <key>PayloadVersion</key>
@@ -55,23 +112,12 @@ function generateXML() {
             <key>PayloadIdentifier</key>
             <string>com.configkit.restrictions.access</string>
             <key>PayloadUUID</key>
-            <string>9D4A6108-3319-4F2B-8A55-1C0983E7B214</string>
+            <string>${profileUUIDs.restrictions}</string>
             <key>PayloadType</key>
             <string>com.apple.applicationaccess</string>
             <key>PayloadVersion</key>
             <integer>1</integer>
-            <key>allowCamera</key>
-            <${!toggleCamera.checked}/>
-            <key>allowAssistant</key>
-            <${!toggleSiri.checked}/>
-            <key>allowScreenShot</key>
-            <${!toggleScreenshot.checked}/>
-            <key>allowAirDrop</key>
-            <${!toggleAirdrop.checked}/>
-            <key>allowAppRemoval</key>
-            <${!toggleAppRemoval.checked}/>
-            <key>allowSafari</key>
-            <${!toggleSafari.checked}/>
+${restrictionKeys}
         </dict>
     </array>
 </dict>
@@ -79,75 +125,100 @@ function generateXML() {
 }
 
 function updatePreview() {
+  const message = footnoteInput.value.trim() || "Swipe Up to Unlock";
   xmlPreview.textContent = generateXML();
+  charCount.textContent = `${footnoteInput.value.length} / ${footnoteInput.maxLength}`;
+  phoneFootnote.textContent = message;
 }
 
-tabLockscreen.addEventListener("click", function() {
-  segmentedControl.classList.remove("restrictions-active");
-  tabLockscreen.classList.add("active");
-  tabRestrictions.classList.remove("active");
-  panelLockscreen.classList.remove("hidden");
-  panelRestrictions.classList.add("hidden");
-});
-
-tabRestrictions.addEventListener("click", function() {
-  segmentedControl.classList.add("restrictions-active");
-  tabRestrictions.classList.add("active");
-  tabLockscreen.classList.remove("active");
-  panelRestrictions.classList.remove("hidden");
-  panelLockscreen.classList.add("hidden");
-});
-
 footnoteInput.addEventListener("input", updatePreview);
-toggleCamera.addEventListener("change", updatePreview);
-toggleSiri.addEventListener("change", updatePreview);
-toggleScreenshot.addEventListener("change", updatePreview);
-toggleAirdrop.addEventListener("change", updatePreview);
-toggleAppRemoval.addEventListener("change", updatePreview);
-toggleSafari.addEventListener("change", updatePreview);
+Object.values(restrictToggles).forEach(function(toggle) {
+  toggle.addEventListener("change", function() {
+    updatePreview();
+    updateRestrictionIndicator();
+  });
+});
 
 updatePreview();
 
+function downloadProfile() {
+  const blob = new Blob([generateXML()], { type: "application/x-apple-aspen-config" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "ConfigKit.mobileconfig";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
 generateButton.addEventListener("click", function() {
+  if (generateButton.disabled) return;
+
   generateButton.disabled = true;
+  generateButton.classList.add("is-generating");
   generateButton.textContent = "Generating...";
-  generateButton.style.opacity = "0.7";
 
   setTimeout(function() {
-    const xmlContent = generateXML();
-    const blob = new Blob([xmlContent], { type: "application/x-apple-aspen-config" });
-    const downloadUrl = URL.createObjectURL(blob);
+    downloadProfile();
 
-    const link = document.createElement("a");
-    link.href = downloadUrl;
-    link.download = "ConfigKit.mobileconfig";
-    document.body.appendChild(link);
-    link.click();
-
+    generateButton.classList.remove("is-generating");
+    generateButton.classList.add("is-success");
     generateButton.textContent = "Generated";
-    generateButton.style.backgroundColor = "#34c759";
-    generateButton.style.opacity = "1";
 
     setTimeout(function() {
-      document.body.removeChild(link);
-      URL.revokeObjectURL(downloadUrl);
-
-      generateButton.disabled = false;
+      generateButton.classList.remove("is-success");
       generateButton.textContent = "Generate .mobileconfig";
-      generateButton.style.backgroundColor = "";
+      generateButton.disabled = false;
     }, 1000);
   }, 500);
 });
 
-copyButton.addEventListener("click", function() {
-  navigator.clipboard.writeText(xmlPreview.textContent);
-  copyButton.textContent = "Copied";
-  copyButton.style.backgroundColor = "#34c759";
-  copyButton.style.color = "#ffffff";
+function copyText(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    return navigator.clipboard.writeText(text);
+  }
 
-  setTimeout(function() {
-    copyButton.textContent = "Copy XML";
-    copyButton.style.backgroundColor = "";
-    copyButton.style.color = "";
-  }, 1000);
+  return new Promise(function(resolve, reject) {
+    const helper = document.createElement("textarea");
+    helper.value = text;
+    helper.setAttribute("readonly", "");
+    helper.style.cssText = "position:fixed;top:-1000px;left:-1000px;opacity:0";
+    document.body.appendChild(helper);
+    helper.select();
+
+    try {
+      const ok = document.execCommand("copy");
+      ok ? resolve() : reject(new Error("Copy failed"));
+    } catch (error) {
+      reject(error);
+    } finally {
+      helper.remove();
+    }
+  });
+}
+
+function selectPreviewText() {
+  const range = document.createRange();
+  range.selectNodeContents(xmlPreview);
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
+}
+
+copyButton.addEventListener("click", function() {
+  copyText(xmlPreview.textContent).then(function() {
+    copyButton.classList.add("is-success");
+    copyButton.textContent = "✓ Copied";
+  }).catch(function() {
+    selectPreviewText();
+    copyButton.textContent = "Press ⌘/Ctrl + C";
+  }).finally(function() {
+    setTimeout(function() {
+      copyButton.classList.remove("is-success");
+      copyButton.textContent = "Copy XML";
+    }, 1600);
+  });
 });
