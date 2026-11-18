@@ -24,14 +24,14 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --bg-page: #000000;
-    --bg-card: #09090b;
-    --bg-input: #121214;
+    --bg-card: #121216;
+    --bg-input: #1d1d20;
     --bg-secondary-btn: rgba(118, 118, 128, 0.2);
     --bar-bg: rgba(0, 0, 0, 0.72);
     --text-main: #ffffff;
     --text-secondary: #98989d;
     --label-color: #c7c7cc;
-    --orb-color: #202024;
+    --orb-color: #1a1a1f;
     --border-color: rgba(255, 255, 255, 0.1);
     --toggle-off: rgba(120, 120, 128, 0.36);
     --toggle-on: #30d158;
@@ -105,7 +105,7 @@ h1 {
   border-radius: 36px;
   margin: 0 0 16px;
   padding: 20px;
-  border: 1px solid var(--border-color);
+  border: 0px solid var(--border-color);
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
@@ -140,7 +140,7 @@ h1 {
   width: 100%;
   max-width: 340px;
   height: 132px;
-  margin: 5px auto 34px;
+  margin: 1px auto 34px;
 }
 
 .phone-controls {
@@ -151,7 +151,7 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 0 37px;
 }
 
 .side-orb {
@@ -168,7 +168,7 @@ h1 {
   transform: translateX(-50%);
   max-width: calc(100% - 48px);
   color: var(--text-main);
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 500;
   line-height: 1.15;
   text-align: center;
